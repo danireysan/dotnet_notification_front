@@ -11,9 +11,7 @@
             "type": "dart",
             "flutterMode": "debug",
             "preLaunchTask": "prod_env",
-            "args": [
-                "--flavor", "prod_env"
-            ],
+            
             "program": "${workspaceFolder}/lib/main.dart"
         },
         {
@@ -22,9 +20,7 @@
             "type": "dart",
             "flutterMode": "profile",
             "preLaunchTask": "prod_env",
-            "args": [
-                "--flavor", "prod_env"
-            ],
+
             "program": "${workspaceFolder}/lib/main.dart"
         },
         {
@@ -33,7 +29,6 @@
             "type": "dart",
             "flutterMode": "release",
             "preLaunchTask": "prod_env",
-            "args": ["--flavor", "prod_env"],
             "program": "${workspaceFolder}/lib/main.dart"
         }
     ]

@@ -46,3 +46,4 @@ app.*.map.json
 .fvm/
 config/prod_config.dart
 config/prod_config.json
+config/dev_config.json
