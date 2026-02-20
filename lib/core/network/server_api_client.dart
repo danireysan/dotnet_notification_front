@@ -4,11 +4,10 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-class ApiClient {
-  final String baseUrl;
-  final _storage = const FlutterSecureStorage();
+import 'server_info.dart';
 
-  ApiClient({required this.baseUrl});
+class ApiClient {
+  final _storage = const FlutterSecureStorage();
 
   /// Get the stored JWT token
   Future<void> saveToken(String token) async {
@@ -31,7 +30,7 @@ class ApiClient {
   // health check endpoint
   Future<bool> healthCheck() async {
     try {
-      final response = await get('/health/ping');
+      final response = await get('$baseUrl/health/ping', urlOverride: true);
       return response.statusCode == 200;
     } catch (e) {
       log('Health check failed: $e');
@@ -40,8 +39,16 @@ class ApiClient {
   }
 
   /// GET Request
-  Future<http.Response> get(String endpoint) async {
-    final url = Uri.parse('$baseUrl$endpoint');
+  Future<http.Response> get(
+    String endpoint, {
+    bool urlOverride = false,
+    String? versionOverride,
+  }) async {
+    final url = Uri.parse(
+      urlOverride
+          ? endpoint
+          : '$baseUrl/${versionOverride ?? apiVersion}$endpoint',
+    );
     final response = await http.get(url, headers: await _getHeaders());
 
     if (kDebugMode) {
@@ -51,8 +58,12 @@ class ApiClient {
   }
 
   /// POST Request
-  Future<http.Response> post(String endpoint, Map<String, dynamic> body) async {
-    final url = Uri.parse('$baseUrl$endpoint');
+  Future<http.Response> post(
+    String endpoint,
+    Map<String, dynamic> body, {
+    String? versionOverride,
+  }) async {
+    final url = Uri.parse('$baseUrl/${versionOverride ?? apiVersion}$endpoint');
     final response = await http.post(
       url,
       headers: await _getHeaders(),
@@ -67,8 +78,12 @@ class ApiClient {
   }
 
   /// PUT Request
-  Future<http.Response> put(String endpoint, Map<String, dynamic> body) async {
-    final url = Uri.parse('$baseUrl$endpoint');
+  Future<http.Response> put(
+    String endpoint,
+    Map<String, dynamic> body, {
+    String? versionOverride,
+  }) async {
+    final url = Uri.parse('$baseUrl/${versionOverride ?? apiVersion}$endpoint');
     final response = await http.put(
       url,
       headers: await _getHeaders(),
@@ -82,8 +97,11 @@ class ApiClient {
   }
 
   // DELETE Request
-  Future<http.Response> delete(String endpoint) async {
-    final url = Uri.parse('$baseUrl$endpoint');
+  Future<http.Response> delete(
+    String endpoint, {
+    String? versionOverride,
+  }) async {
+    final url = Uri.parse('$baseUrl/${versionOverride ?? apiVersion}$endpoint');
     final response = await http.delete(url, headers: await _getHeaders());
 
     if (kDebugMode) {
@@ -97,8 +115,9 @@ class ApiClient {
     final time = DateTime.now().toUtc().toIso8601String();
     const encoder = JsonEncoder.withIndent('  ');
 
-    String formattedRequestBody =
-        requestBody != null ? encoder.convert(requestBody) : '';
+    String formattedRequestBody = requestBody != null
+        ? encoder.convert(requestBody)
+        : '';
 
     String formattedBodyJson;
     try {

@@ -10,27 +10,6 @@ abstract class Failure extends Equatable {
   List<Object?> get props => [message, data];
 }
 
-class BusinessFailure extends Failure {
-  const BusinessFailure({required String message}) : super(message);
-}
-
-class OrderFailure extends Failure {
-  const OrderFailure({required String message, data})
-    : super(message, data: data);
-}
-
-class NetworkFailure extends Failure {
-  const NetworkFailure({required String message}) : super(message);
-}
-
-class ConnectionFailure extends Failure {
-  const ConnectionFailure({required String message}) : super(message);
-}
-
-class AuthenticationFailure extends Failure {
-  const AuthenticationFailure({required String message}) : super(message);
-}
-
 class UnknownFailure extends Failure {
   const UnknownFailure({required String message}) : super(message);
 }

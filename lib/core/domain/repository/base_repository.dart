@@ -1,28 +1,42 @@
 import 'dart:async';
 
-import 'package:dotnet_notification_front/core/domain/error/exception.dart';
 import 'package:dotnet_notification_front/core/domain/error/failure.dart';
 import 'package:fpdart/fpdart.dart';
 
-class BaseRepository<T> {
-  /// Generic function that handles exceptions in the repository layer
-  /// [call] is the function that will be executed in which the
-  /// handle exceptions
-  Future<Either<Failure, T>> remoteRequest({
-    required FutureOr<Either<Failure, T>> Function() call,
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+import '../error/failure_mapper.dart'; // Assuming you are using dartz for Either
+
+class BaseRepository {
+  static Future<Either<Failure, T>> remoteRequest<T>({
+    required Future<http.Response> Function() request,
+    required T Function(dynamic json) onSuccess,
   }) async {
     try {
-      return await call();
-    } on AuthenticationException catch (e) {
-      return Left(AuthenticationFailure(message: e.message));
-    } on ConnectionException catch (e) {
-      return Left(ConnectionFailure(message: e.message));
-    } on ServerException catch (e) {
-      return Left(NetworkFailure(message: e.message));
-    } on HttpException catch (e) {
-      return Left(NetworkFailure(message: e.message));
-    } catch (e) {
+      final response = await request();
+
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        final decoded = jsonDecode(response.body);
+        return Right(onSuccess(decoded));
+      }
+
+      final message = _extractErrorMessage(response.body);
+
+      return Left(
+        mapStatusCodeToFailure(response.statusCode, message: message),
+      );
+    } on Exception catch (e) {
       return Left(UnknownFailure(message: e.toString()));
+    }
+  }
+
+  static String? _extractErrorMessage(String body) {
+    try {
+      final decoded = jsonDecode(body);
+      return decoded['error'] as String?;
+    } catch (_) {
+      return null;
     }
   }
 }
