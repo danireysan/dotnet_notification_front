@@ -8,6 +8,6 @@ class AuthRequestModel extends AuthRequestEntity {
     : super(email: entity.email, password: entity.password);
 
   Map<String, dynamic> toJson() {
-    return {'username': email.value, 'password': password.value};
+    return {'email': email.value, 'password': password.value};
   }
 }

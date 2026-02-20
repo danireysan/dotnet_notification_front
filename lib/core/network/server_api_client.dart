@@ -54,7 +54,7 @@ class ApiClient {
     final response = await http.get(url, headers: await _getHeaders());
 
     if (kDebugMode) {
-      log(_formatResponseLog(response));
+      log(_formatResponseLog(response), name: 'HTTP GET $endpoint');
     }
     return response;
   }
@@ -73,7 +73,10 @@ class ApiClient {
     );
 
     if (kDebugMode) {
-      log(_formatResponseLog(response, requestBody: body));
+      log(
+        _formatResponseLog(response, requestBody: body),
+        name: 'HTTP POST $endpoint',
+      );
     }
 
     return response;
@@ -93,7 +96,10 @@ class ApiClient {
     );
 
     if (kDebugMode) {
-      log(_formatResponseLog(response, requestBody: body));
+      log(
+        _formatResponseLog(response, requestBody: body),
+        name: 'HTTP PUT $endpoint',
+      );
     }
     return response;
   }
@@ -107,7 +113,7 @@ class ApiClient {
     final response = await http.delete(url, headers: await _getHeaders());
 
     if (kDebugMode) {
-      log(_formatResponseLog(response));
+      log(_formatResponseLog(response), name: 'HTTP DELETE $endpoint');
     }
     return response;
   }

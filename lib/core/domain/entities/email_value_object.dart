@@ -1,4 +1,4 @@
-import 'package:dotnet_notification_front/features/auth/domain/entities/auth_request/email_failure.dart';
+import 'package:dotnet_notification_front/core/domain/entities/email_failure.dart';
 import 'package:equatable/equatable.dart';
 import 'package:fpdart/fpdart.dart';
 
@@ -9,11 +9,11 @@ class Email extends Equatable {
   const Email._(this.value);
 
   /// Factory for validation
-  static Either<EmailFailure, Email> create(String input) {
+  static Either<ValidationFailure, Email> create(String input) {
     if (_isValid(input)) {
       return Right(Email._(input));
     }
-    return Left(EmailFailure('Invalid email address'));
+    return Left(ValidationFailure('Invalid email address'));
   }
 
   static bool _isValid(String input) {

@@ -2,7 +2,7 @@ part of 'login_form_cubit.dart';
 
 class LoginFormState extends Equatable {
   final bool isInitial;
-  final Either<EmailFailure, Email> emailResult;
+  final Either<ValidationFailure, Email> emailResult;
   final Either<PasswordFailure, Password> passwordResult;
 
   const LoginFormState({
@@ -37,7 +37,7 @@ class LoginFormState extends Equatable {
   bool get isValid => authRequestEntity != null;
 
   LoginFormState copyWith({
-    Either<EmailFailure, Email>? emailResult,
+    Either<ValidationFailure, Email>? emailResult,
     Either<PasswordFailure, Password>? passwordResult,
   }) {
     return LoginFormState(

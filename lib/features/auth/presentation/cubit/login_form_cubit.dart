@@ -1,6 +1,6 @@
 import 'package:dotnet_notification_front/features/auth/domain/entities/auth_request/auth_request_entity.dart';
-import 'package:dotnet_notification_front/features/auth/domain/entities/auth_request/email_failure.dart';
-import 'package:dotnet_notification_front/features/auth/domain/entities/auth_request/email_value_object.dart';
+import 'package:dotnet_notification_front/core/domain/entities/email_failure.dart';
+import 'package:dotnet_notification_front/core/domain/entities/email_value_object.dart';
 import 'package:dotnet_notification_front/features/auth/domain/entities/auth_request/password_failure.dart';
 import 'package:dotnet_notification_front/features/auth/domain/entities/auth_request/password_value_object.dart';
 import 'package:equatable/equatable.dart';
