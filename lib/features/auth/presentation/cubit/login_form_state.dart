@@ -1,22 +1,26 @@
 part of 'login_form_cubit.dart';
 
 class LoginFormState extends Equatable {
+  final bool isInitial;
   final Either<EmailFailure, Email> emailResult;
   final Either<PasswordFailure, Password> passwordResult;
 
   const LoginFormState({
+    required this.isInitial,
     required this.emailResult,
     required this.passwordResult,
   });
 
   factory LoginFormState.initial() => LoginFormState(
+    isInitial: true,
     emailResult: Email.create(''),
     passwordResult: Password.create(''),
   );
 
   PasswordFailure? get passwordFailure =>
-      passwordResult.fold((l) => l, (r) => null);
-  EmailFailure? get emailFailure => emailResult.fold((l) => l, (r) => null);
+      isInitial ? null : passwordResult.fold((l) => l, (r) => null);
+  String? get emailFailureMessage =>
+      emailResult.fold((l) => isInitial ? null : l.message, (r) => null);
 
   AuthRequestEntity? get authRequestEntity {
     final entity = emailResult.fold(
@@ -37,6 +41,7 @@ class LoginFormState extends Equatable {
     Either<PasswordFailure, Password>? passwordResult,
   }) {
     return LoginFormState(
+      isInitial: false,
       emailResult: emailResult ?? this.emailResult,
       passwordResult: passwordResult ?? this.passwordResult,
     );

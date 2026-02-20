@@ -14,14 +14,14 @@ class Password extends Equatable {
     final hasUppercase = RegExp(r'[A-Z]').hasMatch(input);
     final hasDigits = RegExp(r'[0-9]').hasMatch(input);
     final hasSpecial = RegExp(
-      r'[!@#$%^&*()_+\-=\[\]{}|;:,.<>?]',
+      r'[!@#$%^&*()_+\-=\[\]{};:"\\|,.<>/?]',
     ).hasMatch(input);
 
     // Calculate how many of the 4 conditions are met
     final conditions = [hasLowercase, hasUppercase, hasDigits, hasSpecial];
     final metCount = conditions.where((element) => element).length;
 
-    if (metCount >= 3) {
+    if (metCount == 4) {
       return Right(Password._(input));
     } else {
       return Left(

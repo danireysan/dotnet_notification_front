@@ -64,7 +64,7 @@ void main() {
       act: (cubit) => cubit.emailChanged('invalid-email'),
       verify: (cubit) {
         expect(cubit.state.isValid, isFalse);
-        expect(cubit.state.emailFailure, isNotNull);
+        expect(cubit.state.emailFailureMessage, isNotNull);
       },
     );
   });
