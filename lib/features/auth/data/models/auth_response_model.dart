@@ -1,4 +1,4 @@
-import 'package:dotnet_notification_front/features/domain/entities/auth_response_entity.dart';
+import 'package:dotnet_notification_front/features/auth/domain/entities/auth_response_entity.dart';
 
 class AuthResponseModel extends AuthResponseEntity {
   AuthResponseModel({required super.token});

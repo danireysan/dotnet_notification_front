@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
+import '../../features/auth/di/inject_auth_dependencies.dart';
 import 'inject_core_dependencies.dart';
 
 final getIt = GetIt.instance;
@@ -10,4 +11,5 @@ Future<void> injectAllDependencies() async {
   getIt.pushNewScope();
 
   await injectCoreDependencies();
+  await injectAuthDependencies();
 }

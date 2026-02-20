@@ -6,6 +6,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'server_info.dart';
 
+part 'response_log.dart';
+
 class ApiClient {
   final _storage = const FlutterSecureStorage();
 
@@ -108,32 +110,5 @@ class ApiClient {
       log(_formatResponseLog(response));
     }
     return response;
-  }
-
-  /// Your custom logging formatter
-  String _formatResponseLog(http.Response response, {Object? requestBody}) {
-    final time = DateTime.now().toUtc().toIso8601String();
-    const encoder = JsonEncoder.withIndent('  ');
-
-    String formattedRequestBody = requestBody != null
-        ? encoder.convert(requestBody)
-        : '';
-
-    String formattedBodyJson;
-    try {
-      final json = jsonDecode(response.body);
-      formattedBodyJson = encoder.convert(json);
-    } catch (_) {
-      formattedBodyJson = response.body;
-    }
-
-    return '''
-------------------------------------------------------------
-$time
-Request: ${response.request}${formattedRequestBody.isNotEmpty ? '\nRequest body: $formattedRequestBody' : ''}
-Response code: ${response.statusCode}
-Body: $formattedBodyJson
-------------------------------------------------------------
-''';
   }
 }

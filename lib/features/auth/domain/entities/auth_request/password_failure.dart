@@ -1,4 +1,4 @@
-import '../../../../core/domain/error/failure.dart';
+import '../../../../../core/domain/error/failure.dart';
 
 class PasswordFailure extends Failure {
   final bool hasLowercase;

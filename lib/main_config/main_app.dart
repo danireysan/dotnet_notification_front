@@ -1,3 +1,4 @@
+import 'package:dotnet_notification_front/features/auth/presentation/pages/auth_page.dart';
 import 'package:flutter/material.dart';
 
 class MainApp extends StatelessWidget {
@@ -5,12 +6,6 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
-      ),
-    );
+    return const MaterialApp(home: AuthPage());
   }
 }
