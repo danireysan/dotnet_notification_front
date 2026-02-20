@@ -11,6 +11,10 @@ class ApiClient {
   ApiClient({required this.baseUrl});
 
   /// Get the stored JWT token
+  Future<void> saveToken(String token) async {
+    await _storage.write(key: 'jwt_token', value: token);
+  }
+
   Future<String?> _getToken() async {
     return await _storage.read(key: 'jwt_token');
   }
@@ -22,6 +26,17 @@ class ApiClient {
       'Content-Type': 'application/json',
       if (token != null) 'Authorization': 'Bearer $token',
     };
+  }
+
+  // health check endpoint
+  Future<bool> healthCheck() async {
+    try {
+      final response = await get('/health/ping');
+      return response.statusCode == 200;
+    } catch (e) {
+      log('Health check failed: $e');
+      return false;
+    }
   }
 
   /// GET Request
