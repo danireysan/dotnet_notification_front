@@ -8,6 +8,8 @@ import '../../domain/entities/notification_type.dart';
 import '../../domain/entities/phone_value_object.dart';
 
 class NotificationFormState extends Equatable {
+  final bool isEditing;
+  final String id;
   final String title;
   final String content;
   final NotificationType selectedType;
@@ -18,6 +20,8 @@ class NotificationFormState extends Equatable {
   final Either<Failure, PushTokenValueObject> pushToken;
 
   const NotificationFormState({
+    required this.id,
+    required this.isEditing,
     required this.title,
     required this.content,
     required this.selectedType,
@@ -27,6 +31,8 @@ class NotificationFormState extends Equatable {
   });
 
   factory NotificationFormState.initial() => NotificationFormState(
+    isEditing: false,
+    id: '',
     title: '',
     content: '',
     selectedType: NotificationType.email,
@@ -69,6 +75,8 @@ class NotificationFormState extends Equatable {
   }
 
   NotificationFormState copyWith({
+    String? id,
+    bool? isEditing,
     String? title,
     String? content,
     NotificationType? selectedType,
@@ -77,6 +85,8 @@ class NotificationFormState extends Equatable {
     Either<Failure, PushTokenValueObject>? pushToken,
   }) {
     return NotificationFormState(
+      id: id ?? this.id,
+      isEditing: isEditing ?? this.isEditing,
       title: title ?? this.title,
       content: content ?? this.content,
       selectedType: selectedType ?? this.selectedType,

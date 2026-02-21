@@ -12,6 +12,8 @@ class NotificationFormCubit extends Cubit<NotificationFormState> {
 
   void reset() => emit(NotificationFormState.initial());
 
+  void idChanged(String val) => emit(state.copyWith(id: val, isEditing: true));
+
   void titleChanged(String val) => emit(state.copyWith(title: val));
 
   void contentChanged(String val) => emit(state.copyWith(content: val));
@@ -35,18 +37,21 @@ class NotificationFormCubit extends Cubit<NotificationFormState> {
     switch (state.selectedType) {
       case NotificationType.email:
         return EmailNotificationEntity(
+          id: state.isEditing ? state.id : null,
           title: state.title,
           content: state.content,
           email: state.email!,
         );
       case NotificationType.sms:
         return SmsNotificationEntity(
+          id: state.isEditing ? state.id : null,
           title: state.title,
           content: state.content,
           sms: state.phone!,
         );
       case NotificationType.push:
         return PushNotificationEntity(
+          id: state.isEditing ? state.id : null,
           title: state.title,
           content: state.content,
           pushToken: state.pushTokenValue!,

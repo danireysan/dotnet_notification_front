@@ -30,6 +30,7 @@ class PasswordRequirementsWidget extends StatelessWidget {
               "One special character",
               failure?.hasSpecial ?? isClean,
             ),
+            SizedBox(height: 8),
             LinearProgressIndicator(
               value: (failure?.metCount ?? (isClean ? 4 : 0)) / 4,
               color: isClean ? Colors.green : Colors.orange,
@@ -47,6 +48,7 @@ class PasswordRequirementsWidget extends StatelessWidget {
           isMet ? Icons.check_circle : Icons.close,
           color: isMet ? Colors.green : Colors.red,
         ),
+        SizedBox(width: 8),
         Text(label),
       ],
     );

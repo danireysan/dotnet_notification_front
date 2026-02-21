@@ -18,7 +18,7 @@ class LoginFormState extends Equatable {
   );
 
   PasswordFailure? get passwordFailure =>
-      isInitial ? null : passwordResult.fold((l) => l, (r) => null);
+      passwordResult.fold((l) => l, (r) => null);
   String? get emailFailureMessage =>
       emailResult.fold((l) => isInitial ? null : l.message, (r) => null);
 

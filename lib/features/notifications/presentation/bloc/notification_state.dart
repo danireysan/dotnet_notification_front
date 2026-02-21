@@ -19,6 +19,8 @@ class NotificationLoaded extends NotificationState {
   List<Object?> get props => [notifications];
 }
 
+class DeleteNotificationSuccess extends NotificationState {}
+
 class NotificationError extends NotificationState {
   final String message;
   const NotificationError(this.message);

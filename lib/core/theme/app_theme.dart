@@ -48,10 +48,15 @@ ThemeData minimalistTheme = ThemeData(
 
   outlinedButtonTheme: OutlinedButtonThemeData(
     style: OutlinedButton.styleFrom(
-      foregroundColor: Colors.black,
+      foregroundColor: Colors.transparent,
       minimumSize: const Size(double.infinity, 56),
       side: const BorderSide(color: Color(0xFFD1D1D1)), // Thin light border
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      textStyle: const TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.bold,
+        color: Colors.black,
+      ),
     ),
   ),
 );

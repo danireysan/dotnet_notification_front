@@ -1,7 +1,9 @@
 import 'package:dotnet_notification_front/core/presentation/widgets/progress_hud.dart';
 import 'package:dotnet_notification_front/features/notifications/domain/entities/notification_entity.dart';
+
 import 'package:dotnet_notification_front/features/notifications/domain/entities/result_notification_entity.dart';
 import 'package:dotnet_notification_front/features/notifications/instances/notifications_instances.dart';
+import 'package:dotnet_notification_front/features/notifications/presentation/pages/edit_notification_page.dart';
 import 'package:dotnet_notification_front/features/notifications/presentation/widget/create_notification_dialog.dart';
 import 'package:dotnet_notification_front/features/notifications/presentation/widget/minimalist_empty_state.dart'
     show MinimalistEmptyState;
@@ -41,54 +43,74 @@ class _NotificationsPageState extends State<NotificationsPage> {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: [BlocProvider.value(value: notificationsBloc)],
+      providers: [
+        BlocProvider.value(value: notificationsBloc),
+        BlocProvider.value(value: notificationFormCubit),
+      ],
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Notifications'),
           automaticallyImplyLeading: false,
           centerTitle: true,
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(24),
-          child: BlocConsumer<NotificationBloc, NotificationState>(
-            listener: (context, state) {
-              if (state is NotificationLoaded) {
-                setState(() {
-                  notifications = state.notifications;
-                });
-              }
+        body: BlocConsumer<NotificationBloc, NotificationState>(
+          listener: (context, state) {
+            if (state is NotificationLoaded) {
+              setState(() {
+                notifications = state.notifications;
+              });
+            }
 
-              if (state is NotificationError) {
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(SnackBar(content: Text(state.message)));
-              }
-            },
-            builder: (context, state) {
-              if (notifications.isEmpty) {
-                return MinimalistEmptyState(
-                  title: 'No Notifications',
-                  subtitle: 'You have no notifications at the moment.',
-                  actionLabel: 'Create a Notification',
-                  onActionPressed: openCreateNotificationDialog,
-                );
-              }
-              return ProgressHUD(
-                inAsyncCall: state is NotificationLoading,
-                child: ListView.builder(
-                  itemCount: notifications.length,
-                  itemBuilder: (context, index) {
-                    final notification = notifications[index];
-                    return MinimalistNotificationTile(
-                      title: notification.title,
-                      message: notification.content,
-                      recipient: notification.recipient,
-                    );
-                  },
-                ),
+            if (state is NotificationError) {
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text(state.message)));
+            }
+          },
+          builder: (context, state) {
+            if (notifications.isEmpty) {
+              return MinimalistEmptyState(
+                title: 'No Notifications',
+                subtitle: 'You have no notifications at the moment.',
+                actionLabel: 'Create a Notification',
+                onActionPressed: openCreateNotificationDialog,
               );
-            },
-          ),
+            }
+            return ProgressHUD(
+              inAsyncCall: state is NotificationLoading,
+              child: ListView.builder(
+                itemCount: notifications.length,
+                padding: const EdgeInsets.only(
+                  top: 16,
+                  bottom: 80,
+                  left: 24,
+                  right: 24,
+                ),
+                itemBuilder: (context, index) {
+                  final notification = notifications[index];
+                  return MinimalistNotificationTile(
+                    title: notification.title,
+                    message: notification.content,
+                    recipient: notification.recipient,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EditNotificationPage(
+                            id: notification.id,
+                            title: notification.title,
+                            content: notification.content,
+                            recipient: notification.recipient,
+                            type: notification.type,
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
+            );
+          },
         ),
         floatingActionButton: notifications.isEmpty
             ? null

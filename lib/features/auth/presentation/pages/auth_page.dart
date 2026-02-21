@@ -80,7 +80,7 @@ class _AuthForm extends StatelessWidget {
                 },
               ),
 
-              if (state.passwordFailure != null) PasswordRequirementsWidget(),
+              PasswordRequirementsWidget(),
               FadeInLeft(
                 child: ElevatedButton(
                   onPressed: state.authRequestEntity == null

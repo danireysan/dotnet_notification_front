@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:dotnet_notification_front/features/notifications/domain/entities/result_notification_entity.dart';
 import 'package:equatable/equatable.dart';
@@ -38,6 +39,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
     CreateNotificationEvent event,
     Emitter<NotificationState> emit,
   ) async {
+    emit(NotificationLoading());
     final result = await repository.create(event.notification);
 
     result.fold(
@@ -50,6 +52,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
     UpdateNotificationEvent event,
     Emitter<NotificationState> emit,
   ) async {
+    emit(NotificationLoading());
     final result = await repository.update(event.notification);
 
     result.fold(
@@ -62,16 +65,28 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
     DeleteNotificationEvent event,
     Emitter<NotificationState> emit,
   ) async {
+    emit(NotificationLoading());
     final result = await repository.delete(event.id);
 
     result.fold(
       (failure) => emit(NotificationError(_mapFailureToMessage(failure))),
-      (_) => add(GetNotificationsEvent()), // Refresh list on success
+      (_) {
+        emit(DeleteNotificationSuccess());
+        add(GetNotificationsEvent());
+      },
     );
   }
 
   String _mapFailureToMessage(Failure failure) {
     // Your standard error mapping logic
     return failure.message;
+  }
+
+  @override
+  void onChange(Change<NotificationState> change) {
+    log(
+      'NotificationBloc state changed: ${change.currentState} -> ${change.nextState}',
+    );
+    super.onChange(change);
   }
 }
