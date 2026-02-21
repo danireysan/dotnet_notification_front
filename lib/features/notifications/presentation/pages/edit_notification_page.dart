@@ -1,3 +1,4 @@
+import 'package:dotnet_notification_front/core/presentation/widgets/progress_hud.dart';
 import 'package:dotnet_notification_front/features/notifications/domain/entities/notification_type.dart';
 import 'package:dotnet_notification_front/features/notifications/instances/notifications_instances.dart';
 import 'package:dotnet_notification_front/features/notifications/presentation/bloc/notification_bloc.dart';
@@ -29,164 +30,195 @@ class EditNotificationPage extends StatefulWidget {
 }
 
 class _EditNotificationPageState extends State<EditNotificationPage> {
-  late TextEditingController _titleController;
-  late TextEditingController _contentController;
-  late TextEditingController _recipientController;
-
   @override
   void initState() {
     super.initState();
     notificationFormCubit.reset();
-    notificationFormCubit.idChanged(widget.id);
-    _titleController = TextEditingController(text: widget.title);
-    _contentController = TextEditingController(text: widget.content);
-    _recipientController = TextEditingController(text: widget.recipient);
-
-    // listener
-    _titleController.addListener(() {
-      notificationFormCubit.titleChanged(_titleController.text);
-    });
-    _contentController.addListener(() {
-      notificationFormCubit.contentChanged(_contentController.text);
-    });
-    _recipientController.addListener(() {
-      switch (widget.type) {
-        case NotificationType.email:
-          notificationFormCubit.emailChanged(_recipientController.text);
-          break;
-        case NotificationType.sms:
-          notificationFormCubit.phoneChanged(_recipientController.text);
-          break;
-        case NotificationType.push:
-          notificationFormCubit.pushTokenChanged(_recipientController.text);
-          break;
-      }
-    });
+    notificationFormCubit.titleChanged(widget.title);
+    notificationFormCubit.contentChanged(widget.content);
+    switch (widget.type) {
+      case NotificationType.email:
+        notificationFormCubit.emailChanged(widget.recipient);
+        break;
+      case NotificationType.sms:
+        notificationFormCubit.phoneChanged(widget.recipient);
+        break;
+      case NotificationType.push:
+        notificationFormCubit.pushTokenChanged(widget.recipient);
+        break;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<NotificationBloc, NotificationState>(
-      listener: (context, state) {
-        if (state is DeleteNotificationSuccess) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Notification deleted successfully")),
-          );
-          Navigator.pop(context);
-        }
-      },
-      builder: (context, notificationState) {
-        return BlocBuilder<NotificationFormCubit, NotificationFormState>(
-          builder: (context, formState) {
-            return Scaffold(
-              backgroundColor: const Color(0xFFF6F6F6),
-              appBar: AppBar(
-                centerTitle: true,
-                leading: IconButton(
-                  icon: const Icon(Icons.close, color: Colors.white),
-                  onPressed: () => Navigator.pop(context),
-                ),
-                title: Text("Notification Details"),
-              ),
-              body: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const SizedBox(height: 20),
-                    _buildFieldLabel("NOTIFICATION TITLE"),
-                    TextField(
-                      controller: _titleController,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                      ),
-                      decoration: InputDecoration(
-                        hintText: "Untitled",
-                        errorText: formState.titleError,
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-
-                    _buildFieldLabel("CONTENT"),
-                    TextField(
-                      controller: _contentController,
-                      maxLines: 5,
-                      decoration: InputDecoration(
-                        errorText: formState.contentError,
-                        hintText: "Write your message...",
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-
-                    _buildFieldLabel(
-                      "${widget.type.name.toUpperCase()} RECIPIENT",
-                    ),
-                    Visibility(
-                      visible: widget.type != NotificationType.push,
-                      child: TextField(
-                        controller: _recipientController,
-                        decoration: InputDecoration(
-                          hintText: _getHintText(),
-                          errorText: formState.selectedTypeErrorMessage,
-                          prefixIcon: Icon(
-                            _getIcon(),
-                            size: 20,
-                            color: Colors.black54,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 40),
-
-                    ElevatedButton(
-                      onPressed: formState.isValid
-                          ? () {
-                              final entity = notificationFormCubit.getEntity();
-                              if (entity != null) {
-                                notificationsBloc.add(
-                                  UpdateNotificationEvent(entity),
-                                );
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text(
-                                      "Notification updated successfully",
-                                    ),
-                                  ),
-                                );
-                              }
-                            }
-                          : null,
-                      child: const Text("Update Notification"),
-                    ),
-                    SizedBox(height: 12),
-                    OutlinedButton.icon(
-                      onPressed: () async {
-                        final shouldDelete = await showDialog(
-                          context: context,
-                          builder: (context) =>
-                              DeleteNotificationDialog(title: widget.title),
-                        );
-
-                        if (shouldDelete == true) {
-                          notificationsBloc.add(
-                            DeleteNotificationEvent(widget.id),
-                          );
-                        }
-                      },
-                      icon: const Icon(Icons.delete_outline, color: Colors.red),
-                      label: const Text(
-                        "Delete Notification",
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    ),
-                  ],
-                ),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider.value(value: notificationsBloc),
+        BlocProvider.value(value: notificationFormCubit),
+      ],
+      child: BlocConsumer<NotificationBloc, NotificationState>(
+        listener: (context, state) {
+          if (state is DeleteNotificationSuccess) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text("Notification deleted successfully"),
               ),
             );
-          },
-        );
-      },
+            Navigator.pop(context);
+          }
+          if (state is UpdateNotificationSuccess) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text("Notification updated successfully"),
+              ),
+            );
+          }
+          if (state is NotificationError) {
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(state.message)));
+          }
+        },
+        builder: (context, notificationState) {
+          return BlocBuilder<NotificationFormCubit, NotificationFormState>(
+            builder: (context, formState) {
+              return ProgressHUD(
+                inAsyncCall: notificationState is NotificationLoading,
+                child: Scaffold(
+                  backgroundColor: const Color(0xFFF6F6F6),
+                  appBar: AppBar(
+                    centerTitle: true,
+                    leading: IconButton(
+                      icon: const Icon(Icons.close, color: Colors.white),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                    title: Text("Notification Details"),
+                  ),
+                  body: SingleChildScrollView(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        const SizedBox(height: 20),
+                        _buildFieldLabel("NOTIFICATION TITLE"),
+                        TextFormField(
+                          initialValue: widget.title,
+                          onChanged: (value) =>
+                              notificationFormCubit.titleChanged(value),
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                          decoration: InputDecoration(
+                            hintText: "Untitled",
+                            errorText: formState.titleError,
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+
+                        _buildFieldLabel("CONTENT"),
+                        TextFormField(
+                          initialValue: widget.content,
+
+                          onChanged: (value) =>
+                              notificationFormCubit.contentChanged(value),
+                          maxLines: 5,
+                          decoration: InputDecoration(
+                            errorText: formState.contentError,
+                            hintText: "Write your message...",
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+
+                        _buildFieldLabel(
+                          "${widget.type.name.toUpperCase()} RECIPIENT",
+                        ),
+                        Visibility(
+                          visible: widget.type != NotificationType.push,
+                          child: TextFormField(
+                            initialValue: widget.recipient,
+                            onChanged: (value) {
+                              switch (widget.type) {
+                                case NotificationType.email:
+                                  notificationFormCubit.emailChanged(value);
+                                  break;
+                                case NotificationType.sms:
+                                  notificationFormCubit.phoneChanged(value);
+                                  break;
+                                case NotificationType.push:
+                                  notificationFormCubit.pushTokenChanged(value);
+                                  break;
+                              }
+                            },
+                            decoration: InputDecoration(
+                              hintText: _getHintText(),
+                              errorText: formState.selectedTypeErrorMessage,
+                              prefixIcon: Icon(
+                                _getIcon(),
+                                size: 20,
+                                color: Colors.black54,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 40),
+
+                        ElevatedButton(
+                          onPressed: formState.isValid
+                              ? () {
+                                  notificationFormCubit.idChanged(widget.id);
+                                  final entity = notificationFormCubit
+                                      .getEntity();
+                                  if (entity != null && entity.id != null) {
+                                    notificationsBloc.add(
+                                      UpdateNotificationEvent(entity),
+                                    );
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                          "Please fix the errors in the form",
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                }
+                              : null,
+                          child: const Text("Update Notification"),
+                        ),
+                        SizedBox(height: 12),
+                        OutlinedButton.icon(
+                          onPressed: () async {
+                            final shouldDelete = await showDialog(
+                              context: context,
+                              builder: (context) =>
+                                  DeleteNotificationDialog(title: widget.title),
+                            );
+
+                            if (shouldDelete == true) {
+                              notificationsBloc.add(
+                                DeleteNotificationEvent(widget.id),
+                              );
+                            }
+                          },
+                          icon: const Icon(
+                            Icons.delete_outline,
+                            color: Colors.red,
+                          ),
+                          label: const Text(
+                            "Delete Notification",
+                            style: TextStyle(color: Colors.black),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 

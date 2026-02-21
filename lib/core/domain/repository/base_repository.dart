@@ -17,8 +17,11 @@ class BaseRepository {
       final response = await request();
 
       if (response.statusCode >= 200 && response.statusCode < 300) {
-        final decoded = jsonDecode(response.body);
-        return Right(onSuccess(decoded));
+        if (response.body.isNotEmpty) {
+          final decoded = jsonDecode(response.body);
+          return Right(onSuccess(decoded));
+        }
+        return Right(onSuccess(""));
       }
 
       final message = _extractErrorMessage(response.body);

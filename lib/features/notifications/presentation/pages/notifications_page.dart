@@ -69,11 +69,14 @@ class _NotificationsPageState extends State<NotificationsPage> {
           },
           builder: (context, state) {
             if (notifications.isEmpty) {
-              return MinimalistEmptyState(
-                title: 'No Notifications',
-                subtitle: 'You have no notifications at the moment.',
-                actionLabel: 'Create a Notification',
-                onActionPressed: openCreateNotificationDialog,
+              return ProgressHUD(
+                inAsyncCall: state is NotificationLoading,
+                child: MinimalistEmptyState(
+                  title: 'No Notifications',
+                  subtitle: 'You have no notifications at the moment.',
+                  actionLabel: 'Create a Notification',
+                  onActionPressed: openCreateNotificationDialog,
+                ),
               );
             }
             return ProgressHUD(

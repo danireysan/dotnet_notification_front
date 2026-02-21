@@ -10,8 +10,12 @@ String _formatResponseLog(http.Response response, {Object? requestBody}) {
 
   String formattedBodyJson;
   try {
-    final json = jsonDecode(response.body);
-    formattedBodyJson = encoder.convert(json);
+    if (response.body.isNotEmpty) {
+      final json = jsonDecode(response.body);
+      formattedBodyJson = encoder.convert(json);
+    } else {
+      formattedBodyJson = ''; // Handle empty body gracefully
+    }
   } catch (_) {
     formattedBodyJson = response.body;
   }

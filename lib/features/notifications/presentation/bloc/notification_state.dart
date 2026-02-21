@@ -21,6 +21,8 @@ class NotificationLoaded extends NotificationState {
 
 class DeleteNotificationSuccess extends NotificationState {}
 
+class UpdateNotificationSuccess extends NotificationState {}
+
 class NotificationError extends NotificationState {
   final String message;
   const NotificationError(this.message);

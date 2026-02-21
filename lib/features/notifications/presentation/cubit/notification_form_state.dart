@@ -99,6 +99,8 @@ class NotificationFormState extends Equatable {
   @override
   List<Object> get props => [
     title,
+    id,
+    isEditing,
     content,
     selectedType,
     emailResult,

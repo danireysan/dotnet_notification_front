@@ -57,7 +57,10 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
 
     result.fold(
       (failure) => emit(NotificationError(_mapFailureToMessage(failure))),
-      (_) => add(GetNotificationsEvent()),
+      (_) {
+        emit(UpdateNotificationSuccess());
+        add(GetNotificationsEvent());
+      },
     );
   }
 
