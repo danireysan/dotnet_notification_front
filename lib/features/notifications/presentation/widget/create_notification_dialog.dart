@@ -17,9 +17,6 @@ class CreateNotificationDialog extends StatefulWidget {
 
 class _CreateNotificationDialogState extends State<CreateNotificationDialog> {
   NotificationType _selectedType = NotificationType.email;
-  final _titleController = TextEditingController();
-  final _contentController = TextEditingController();
-  final _extraController = TextEditingController();
 
   @override
   void initState() {
@@ -60,7 +57,6 @@ class _CreateNotificationDialogState extends State<CreateNotificationDialog> {
 
                     const SizedBox(height: 20),
                     TextField(
-                      controller: _titleController,
                       decoration: InputDecoration(
                         hintText: 'Title',
                         errorText: state.titleError,
@@ -70,7 +66,6 @@ class _CreateNotificationDialogState extends State<CreateNotificationDialog> {
                     ),
                     const SizedBox(height: 12),
                     TextField(
-                      controller: _contentController,
                       maxLines: 3,
                       decoration: InputDecoration(
                         hintText: 'Content',
@@ -85,7 +80,6 @@ class _CreateNotificationDialogState extends State<CreateNotificationDialog> {
                     Visibility(
                       visible: !(_selectedType == NotificationType.push),
                       child: TextField(
-                        controller: _extraController,
                         decoration: InputDecoration(
                           hintText: _selectedType == NotificationType.email
                               ? 'Email Address'
