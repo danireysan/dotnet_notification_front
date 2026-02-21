@@ -40,7 +40,7 @@ class NotificationRequestModel {
         type: p.type.value,
         title: p.title,
         content: p.content,
-        push: p.pushToken,
+        push: p.pushToken.value,
       ),
     };
   }

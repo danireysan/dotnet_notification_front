@@ -10,10 +10,10 @@ class ResultNotificationModel extends ResultNotificationEntity {
 
   factory ResultNotificationModel.fromJson(Map<String, dynamic> json) {
     return ResultNotificationModel(
-      id: json['Id'] as String,
-      title: json['Title'] as String,
-      content: json['Content'] as String,
-      recipient: json['Recipient'] as String,
+      id: json['id'] as String,
+      title: json['title'] as String,
+      content: json['content'] as String,
+      recipient: json['recipient'] as String,
     );
   }
 

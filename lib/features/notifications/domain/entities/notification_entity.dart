@@ -1,5 +1,6 @@
 import 'package:dotnet_notification_front/core/domain/entities/email_value_object.dart';
 import 'package:dotnet_notification_front/features/notifications/domain/entities/phone_value_object.dart';
+import 'package:dotnet_notification_front/features/notifications/domain/entities/push_token_value_object.dart';
 
 import 'notification_type.dart';
 
@@ -38,7 +39,7 @@ class SmsNotificationEntity extends NotificationEntity {
 }
 
 class PushNotificationEntity extends NotificationEntity {
-  final String pushToken;
+  final PushTokenValueObject pushToken;
   PushNotificationEntity({
     super.id,
     required super.title,

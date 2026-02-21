@@ -13,6 +13,15 @@ ThemeData minimalistTheme = ThemeData(
       letterSpacing: -0.5,
     ),
   ),
+  appBarTheme: const AppBarTheme(
+    backgroundColor: Colors.black,
+    elevation: 0,
+    titleTextStyle: TextStyle(
+      fontSize: 20,
+      fontWeight: FontWeight.w600,
+      color: Colors.white,
+    ),
+  ),
 
   inputDecorationTheme: InputDecorationTheme(
     filled: true,
