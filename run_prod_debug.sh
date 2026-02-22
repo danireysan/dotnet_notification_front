@@ -1,0 +1,1 @@
+fvm dart env/prod.dart && fvm flutter pub get && fvm flutter run
