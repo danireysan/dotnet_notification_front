@@ -47,3 +47,7 @@ app.*.map.json
 config/prod_config.dart
 config/prod_config.json
 config/dev_config.json
+firebase.json
+android/app/google-services.json
+lib/firebase_options.dart
+ios/Runner/GoogleService-Info.plist
