@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:animate_do/animate_do.dart';
 import 'package:dotnet_notification_front/features/notifications/instances/notifications_instances.dart';
 import 'package:dotnet_notification_front/features/notifications/presentation/cubit/notification_form_cubit.dart';
@@ -16,12 +18,23 @@ class CreateNotificationDialog extends StatefulWidget {
 }
 
 class _CreateNotificationDialogState extends State<CreateNotificationDialog> {
-  NotificationType _selectedType = NotificationType.email;
-
   @override
   void initState() {
     super.initState();
     notificationFormCubit.reset();
+    setPushToken();
+  }
+
+  Future<void> setPushToken() async {
+    final token = await tokenRepository.getToken();
+
+    if (token != null) {
+      notificationFormCubit.pushTokenChanged(token);
+    } else if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Failed to retrieve push token')),
+      );
+    }
   }
 
   @override
@@ -53,7 +66,7 @@ class _CreateNotificationDialogState extends State<CreateNotificationDialog> {
                     const SizedBox(height: 24),
 
                     // Minimalist Type Selector
-                    _buildTypeSelector(),
+                    _buildTypeSelector(state),
 
                     const SizedBox(height: 20),
                     TextField(
@@ -78,10 +91,10 @@ class _CreateNotificationDialogState extends State<CreateNotificationDialog> {
 
                     // Dynamic field based on type
                     Visibility(
-                      visible: !(_selectedType == NotificationType.push),
+                      visible: !(state.selectedType == NotificationType.push),
                       child: TextField(
                         decoration: InputDecoration(
-                          hintText: _selectedType == NotificationType.email
+                          hintText: state.selectedType == NotificationType.email
                               ? 'Email Address'
                               : 'Phone Number',
 
@@ -89,12 +102,28 @@ class _CreateNotificationDialogState extends State<CreateNotificationDialog> {
                         ),
 
                         onChanged: (value) {
-                          if (_selectedType == NotificationType.email) {
+                          if (state.selectedType == NotificationType.email) {
                             notificationFormCubit.emailChanged(value);
                           } else {
                             notificationFormCubit.phoneChanged(value);
                           }
                         },
+                      ),
+                    ),
+                    Visibility(
+                      visible:
+                          state.selectedType == NotificationType.push &&
+                          state.selectedTypeErrorMessage != null,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Text(
+                          state.selectedTypeErrorMessage ?? '',
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            color: Colors.red,
+                            fontSize: 12,
+                          ),
+                        ),
                       ),
                     ),
 
@@ -121,7 +150,7 @@ class _CreateNotificationDialogState extends State<CreateNotificationDialog> {
     );
   }
 
-  Widget _buildTypeSelector() {
+  Widget _buildTypeSelector(NotificationFormState state) {
     return Container(
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
@@ -130,10 +159,13 @@ class _CreateNotificationDialogState extends State<CreateNotificationDialog> {
       ),
       child: Row(
         children: NotificationType.values.map((type) {
-          bool isSelected = _selectedType == type;
+          bool isSelected = state.selectedType == type;
           return Expanded(
             child: GestureDetector(
-              onTap: () => setState(() => _selectedType = type),
+              onTap: () {
+                log('Notification type changed to: ${type.name}');
+                notificationFormCubit.typeChanged(type);
+              },
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
                 padding: const EdgeInsets.symmetric(vertical: 12),

@@ -11,7 +11,11 @@ class PushTokenValueObject extends Equatable {
 
   static Either<Failure, PushTokenValueObject> create(String input) {
     if (input.trim().isEmpty) {
-      return Left(ValidationFailure('Push token cannot be empty'));
+      return Left(
+        ValidationFailure(
+          'Failed to create PushToken: Cannot send message without a valid push token.',
+        ),
+      );
     }
     return Right(PushTokenValueObject._(input));
   }
