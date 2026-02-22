@@ -39,17 +39,17 @@ chmod 711 run_prod_debug.sh
 
 - Base Repository Pattern: Implemented a centralized Base Repository to standardize the handling of HTTP status codes, timeouts, and the mapping of exceptions into a unified Failure object.
 ## Known issues
-Limited Theme Support: The app currently supports a single primary theme; a more robust Dynamic Theme system is not yet implemented.
+- Limited Theme Support: The app currently supports a single primary theme; a more robust Dynamic Theme system is not yet implemented.
 
-Hardcoded Error Strings: Some error messages are hardcoded in the Failure classes rather than being fully localized or driven by a translation engine.
+- Hardcoded Error Strings: Some error messages are hardcoded in the Failure classes rather than being fully localized or driven by a translation engine.
 
 ## Possible improvements
-Offline First: Adding a Hive or Drift LocalDataSource to the Repository layer for features that require offline persistence.
+- Offline First: Adding a Hive or Drift LocalDataSource to the Repository layer for features that require offline persistence.
 
-Skeleton Loaders: Improving the UX by adding Shimmer/Skeleton loaders to replace the standard CircularProgressIndicator.
+- Skeleton Loaders: Improving the UX by adding Shimmer/Skeleton loaders to replace the standard CircularProgressIndicator.
 
 ## Non Goals
-Full Offline Sync: Real-time synchronization between local and remote databases is out of scope; the app currently fetches fresh data on view initialization.
+- Full Offline Sync: Real-time synchronization between local and remote databases is out of scope; the app currently fetches fresh data on view initialization.
 
-Web/Desktop Support: While Flutter is cross-platform, the UI and plugins have only been optimized and tested for Mobile (iOS/Android).
+- Web/Desktop Support: While Flutter is cross-platform, the UI and plugins have only been optimized and tested for Mobile (iOS/Android).
 
