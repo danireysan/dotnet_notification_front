@@ -47,6 +47,7 @@ class _EditNotificationPageState extends State<EditNotificationPage> {
         notificationFormCubit.pushTokenChanged(widget.recipient);
         break;
     }
+    notificationFormCubit.typeChanged(widget.type);
   }
 
   @override
