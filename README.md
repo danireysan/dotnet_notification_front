@@ -8,6 +8,7 @@ A minimalist flutter app for sending notifications through different means
 You need to have FVM installed to run the project
 You need a firebase project
 You need firebase CLI and flutterfire CLI and run
+You need a base URL you can watch an example in example_config.json
 
 ```
 flutterfire configure --[your-firebase-project]
