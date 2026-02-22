@@ -2,9 +2,9 @@
 
 A minimalist flutter app for sending notifications through different means
 
-### How to run it
+## How to run it
 
-## Prerequesites
+### Prerequesites
 You need to have FVM installed to run the project
 You need a firebase project
 You need firebase CLI and flutterfire CLI and run
@@ -12,7 +12,7 @@ You need firebase CLI and flutterfire CLI and run
 ```
 flutterfire configure --[your-firebase-project]
 ```
-## Run it
+### Run it
 You can just press F5 in vscode with 
 
 OR
@@ -20,7 +20,6 @@ OR
 ```
 chmod 711 run_prod_debug.sh
 ./run_prod_debug.sh
-
 ```
 ## Decisions Taken for: Mobile (Flutter)
 ### Setup, Architecture and Design
