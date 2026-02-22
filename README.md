@@ -1,4 +1,4 @@
-# dotnet_notification_front
+# Notify
 
 A minimalist flutter app for sending notifications through different means
 
