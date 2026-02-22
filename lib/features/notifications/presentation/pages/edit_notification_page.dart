@@ -130,9 +130,10 @@ class _EditNotificationPageState extends State<EditNotificationPage> {
                         ),
                         const SizedBox(height: 24),
 
-                        _buildFieldLabel(
-                          "${widget.type.name.toUpperCase()} RECIPIENT",
-                        ),
+                        if (widget.type != NotificationType.push)
+                          _buildFieldLabel(
+                            "${widget.type.name.toUpperCase()} RECIPIENT",
+                          ),
                         Visibility(
                           visible: widget.type != NotificationType.push,
                           child: TextFormField(

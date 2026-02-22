@@ -29,6 +29,7 @@ class _CreateNotificationDialogState extends State<CreateNotificationDialog> {
     final token = await tokenRepository.getToken();
 
     if (token != null) {
+      log('Push token retrieved: $token');
       notificationFormCubit.pushTokenChanged(token);
     } else if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(

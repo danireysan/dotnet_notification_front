@@ -54,7 +54,7 @@ class NotificationRequestModel {
       if (id != null) 'Id': id,
       if (email != null) 'Email': email,
       if (sms != null) 'Sms': sms,
-      if (push != null) 'Push': push,
+      if (push != null) 'DeviceId': push,
     };
   }
 }
