@@ -22,7 +22,7 @@ OR
 chmod 711 run_prod_debug.sh
 ./run_prod_debug.sh
 ```
-## Decisions Taken for: Mobile (Flutter)
+## Decisions Taken for:
 ### Setup, Architecture and Design
 - Simplified Clean Architecture: The project uses a "Lean" version of Clean Architecture, removing the UseCase layer to avoid "Pass-through" functions (Middle Men) and reduce boilerplate where business logic is straightforward.
 
